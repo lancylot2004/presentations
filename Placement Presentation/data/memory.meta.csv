@@ -1,0 +1,2 @@
+cpu_quota_usec,cpu_period_usec,memory_max,interval_ns,rows,cgroup_vanished
+200000,100000,536870912,1000000,3976,1

@@ -1,0 +1,207 @@
+/* Colour and type tokens. Dark deck, high contrast for a lecture-room projector.
+   Flipping to a light deck means overriding this block only. */
+:root {
+  /* Dracula, from https://spec.draculatheme.com/ . --sp-bg is the spec's
+     AnsiBlack rather than its Background, so Background is free to serve as
+     the raised surface. --sp-dim is Comment lifted 14% toward Foreground:
+     Comment itself is only 2.5:1 on --sp-surface-2, where the Architecture
+     source-card icons sit, against a 3:1 floor. Ratios below are against
+     --sp-bg; every text token also clears its floor on both surfaces. */
+  --sp-bg: #21222c;         /* AnsiBlack                      */
+  --sp-surface: #282a36;    /* Background                     */
+  --sp-surface-2: #343746;  /* Background -> Current Line      */
+  --sp-border: #44475a;     /* Current Line                   */
+  --sp-text: #f8f8f2;       /* Foreground            14.8:1   */
+  --sp-muted: #a6aec7;      /* Comment -> Foreground  7.1:1   */
+  --sp-dim: #7785af;        /* Comment +14% Foreground 4.3:1  */
+
+  --sp-accent: #bd93f9;   /* Purple: structure, consumers, CPU usage */
+  --sp-warn: #ffb86c;     /* Orange: limits, quotas, throttling */
+  --sp-good: #8be9fd;     /* Cyan, not Green: Green and Orange are the same
+                             colour to a deuteranope (dE2000 3.3) and they
+                             stack adjacent in the memory chart. */
+  --sp-rust: #ff5555;     /* Red, not Pink: Pink and Purple merge under
+                             protanopia (dE2000 8.4), and the Rust card sits
+                             among accent-bordered cards. */
+
+  --sp-font-huge: 3.6rem;
+  --sp-font-title: 2.6rem;
+  --sp-font-body: 1.5rem;
+  --sp-font-small: 1.1rem;
+}
+
+.slidev-layout {
+  background: var(--sp-bg);
+  color: var(--sp-text);
+  font-size: var(--sp-font-body);
+  line-height: 1.45;
+}
+
+.slidev-layout h1 {
+  font-size: var(--sp-font-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--sp-text);
+}
+
+/* The title is the one thing in the same place on every slide, so it is
+   top-aligned rather than floating with the content, and carries a rule that
+   nothing else on a slide uses. It is deliberately modest: the chart slides
+   cannot spare the height a display-sized title would take, and one size for
+   every slide beats two. The cover keeps the larger --sp-font-title, because
+   its heading is not the slide's first child and so never matches here. */
+.slidev-layout.default > h1:first-child {
+  flex: none;
+  margin: 0 0 1.1rem;
+  font-size: 1.95rem;
+}
+
+/* The gap under the title is set here, once, so a slide's own mt-* on its
+   first block cannot make the title look like it moved. */
+.slidev-layout.default > h1:first-child + * { margin-top: 0 !important; }
+
+.slidev-layout.default > h1:first-child::after {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 3px;
+  margin-top: 0.55rem;
+  border-radius: 2px;
+  background: var(--sp-accent);
+}
+
+.slidev-layout h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--sp-muted);
+}
+
+/* Content flows from the top so the title never moves between slides. It was
+   centred before, which floated the title by however tall the content was. */
+.slidev-layout.default {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Children must not shrink: a tall slide should overflow rather than squash its
+   own text, which is how glyphs were being clipped in the PDF export. */
+.slidev-layout.default > * { flex-shrink: 0; }
+
+.slidev-layout li { margin: 0.35em 0; }
+.slidev-layout code { color: var(--sp-accent); }
+
+/* Small fixed-corner provenance tag for the result charts. */
+.sp-tag {
+  position: absolute;
+  right: 1.6rem;
+  bottom: 1.2rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sp-dim);
+}
+
+.sp-kicker {
+  font-size: var(--sp-font-small);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sp-dim);
+}
+
+/* Shared building blocks for the text slides, so they match the custom
+   components without each slide inventing its own styling. */
+.sp-lead { font-size: 1.9rem; font-weight: 600; line-height: 1.3; }
+
+.sp-cards { display: grid; gap: 0.9rem; }
+.sp-cards-2 { grid-template-columns: repeat(2, 1fr); }
+.sp-cards-3 { grid-template-columns: repeat(3, 1fr); }
+.sp-cards-5 { grid-template-columns: repeat(5, 1fr); }
+
+.sp-card {
+  border: 1px solid var(--sp-border);
+  border-radius: 0.6rem;
+  background: var(--sp-surface);
+  padding: 1rem 1.1rem;
+}
+.sp-card-accent { border-color: color-mix(in srgb, var(--sp-accent) 55%, var(--sp-border)); }
+.sp-card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
+.sp-card-sub { margin-top: 0.3rem; font-size: 1.28rem; color: var(--sp-muted); line-height: 1.3; }
+.sp-card .ico { font-size: 1.6rem; color: var(--sp-accent); margin-bottom: 0.5rem; display: block; }
+
+/* Row of ruled-out tools. Plain CSS with an explicit line-height, because the
+   utility-class version was getting its ascenders clipped in the PDF export. */
+.sp-out-row {
+  display: flex;
+  gap: 2.6rem;
+  margin: 1.4rem 0;
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+/* A ruled-out option: greyed and struck through. */
+.sp-out {
+  color: var(--sp-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--sp-warn);
+}
+
+.sp-quote { font-size: 1.25rem; font-style: italic; line-height: 1.35; }
+
+/* Title slide. The DoCSoc mark is the only thing in the background. It is
+   painted on the pseudo-element rather than the layout itself, because the
+   cover layout sets background-size: cover as an inline style and inline wins
+   against any rule here. The pseudo also takes the opacity directly, so the
+   mark sits below the text without a second dimming layer. */
+.slidev-layout.title-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/docsoc.png');
+  background-repeat: no-repeat;
+  background-position: right 3rem bottom 2.5rem;
+  background-size: auto 42%;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.slidev-layout.title-slide > * { position: relative; }
+
+/* The letters git status prints, coloured so the shape of a change reads
+   before anyone has been told what the letters mean. */
+.sp-st { width: 1ch; font-weight: 700; flex: none; }
+.sp-st.A { color: var(--sp-good); }
+.sp-st.M { color: var(--sp-warn); }
+.sp-st.R { color: var(--sp-accent); }
+.sp-st.D { color: var(--sp-rust); }
+
+/* A small labelled chip: a language, a tool, a thing inside a box. Shared,
+   because the language slide and the toolchain slides both reach for it. */
+.sp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid var(--sp-border);
+  border-radius: 0.45rem;
+  background: var(--sp-surface-2);
+  font-size: 1.15rem;
+  color: var(--sp-muted);
+  white-space: nowrap;
+}
+.sp-chip .ico { font-size: 1em; margin: 0; }
+
+/* Every chip lifts under the pointer. Where an ancestor sets --tone the chip
+   borrows it, so a language chip glows in its category's colour and a chip
+   with no tone around it falls back to the neutral one. */
+.sp-chip {
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease,
+    transform 160ms ease;
+}
+.sp-chip:hover {
+  border-color: var(--tone, var(--sp-dim));
+  background: color-mix(in srgb, var(--tone, var(--sp-text)) 14%, var(--sp-surface-2));
+  color: var(--sp-text);
+  transform: translateY(-1px);
+}
