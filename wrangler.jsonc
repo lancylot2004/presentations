@@ -1,0 +1,15 @@
+{
+  "name": "presentations",
+  "compatibility_date": "2026-10-02",
+  "assets": {
+    "directory": "./dist",
+    // Slidev builds an SPA whose 404.html is a copy of index.html, so the
+    // nearest-404 fallback hands deep links (/placement/presenter, /placement/3)
+    // back to the deck's own router. "single-page-application" would serve the
+    // root index.html instead, which breaks once there is more than one deck.
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "presentation.lancy.dev", "custom_domain": true }
+  ]
+}
